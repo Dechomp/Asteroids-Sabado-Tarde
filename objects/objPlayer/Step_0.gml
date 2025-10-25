@@ -76,7 +76,7 @@ Para fechar
 				//Para a direita, a direcaoHorizontal vai ser 1 positivo
 				//E a direcaoVertical vai ser 0
 				direcaoVertical = 0
-				direcaoHorizontal = 1
+				direcaoHorizontal = velocidade * 2
 			}
 		
 			//180 está indo para esquerda
@@ -84,21 +84,22 @@ Para fechar
 				//Não desce e nem sobe, ou seja, direcasoVertical vai ser 0
 				//E a direcaoHorizontal vai ser -1
 				direcaoVertical = 0
-				direcaoHorizontal = -1
+				direcaoHorizontal = -velocidade * 2
 			}
 		
 			//90 está indo para cima
 			else if image_angle == 90{
 				//Apenas sobe
-				direcaoVertical = -1
+				direcaoVertical = -velocidade * 2
 				direcaoHorizontal = 0
 			}
 		
 			//Só sobrou o 270, que é para baixo
 			else{
 				//Apenas desce
+				direcaoVertical = velocidade * 2
 				direcaoHorizontal = 0
-				direcaoVertical = 1	
+				
 			}
 			angulo = 0
 		#endregion
@@ -123,25 +124,25 @@ Para fechar
 			//Agora, iremos calcular para qaul direção a nave vai
 			//Caso o angulo seja menor 180, a nave está subindo
 			if image_angle < 180{
-				direcaoVertical = -1
+				direcaoVertical = -velocidade
 			}
 		
 			//Caso não seja, só pode ser maior, ou seja, está descendo
 		
 			else{
-				direcaoVertical = 1
+				direcaoVertical = velocidade
 			}
 		
 			//Agora as direções horizontais
 			//Caso seja menor que 90 ou maior que 270, vai para direita
 			if image_angle < 90 or image_angle > 270{
-				direcaoHorizontal = 1
+				direcaoHorizontal = velocidade
 			}
 		
 			//Cso não seja, só pode ser maior que 90 ou menor que 270, ou seja, vai para esquerda
 		
 			else if image_angle > 90 or image_angle < 270{
-				direcaoHorizontal = -1
+				direcaoHorizontal = -velocidade
 			}
 		#endregion
 	}
@@ -150,10 +151,111 @@ Para fechar
 	
 	//Caso precione os botões para cima
 	
+	
+	
 	//No final, iremos somar o angulo mais 1 e multiplicar pela direção
 	if andar{
-		x += (angulo + 1) * direcaoHorizontal
-		y +=  direcaoVertical
+		/*
+		A cada vez que o player apertar para frente, iremos aumentar o valor da propulsão
+		E poir exemplo, caso ele estaja indo parta frente e virar ao lado ao contrário, demorara
+		Um certo tempo antes de ele volatr a avançar por causa do valor de propulsão
+		E caso o player não aperte nehuma botão, iremos somar um ou menos umaao valor atual
+		Para que ele desacerele sozinho
+		*/
+		//Vamos limitar a velocidade do player para o que há em velocidadeLimite
+		//Ou seja, a propulsão vai de (atualmente) de 30 a -30
+		if propulsaoHorizontal + direcaoHorizontal <= velocidadeLimite and propulsaoHorizontal + direcaoHorizontal  >= - velocidadeLimite{
+			propulsaoHorizontal += direcaoHorizontal
+		}
+		
+		if propulsaoVertical + direcaoVertical <= velocidadeLimite and propulsaoVertical  + direcaoVertical  >= - velocidadeLimite{
+			propulsaoVertical += direcaoVertical
+		}
 	}
+	else{
+		/*
+		Para desacelerar o valor que há em propulsão, iremos ultilazar a função sign()
+		Descrição:
+		function sign(n: Real) -> Real
+		This function returns whether a number is positive, negative or neither and returns 
+		1, -1, 0 respectively.
+		n The number to get the sign of.
+		
+		Tradução
+		Função sign (n: valor real) retorno de valor real
+		Esta função retorna quando um número é positivo, negativo, ou nehuma dos dois(0) e retorna
+		1, -1 e 0 respectivamente
+		n O número que queira pegar o sinal
+		
+		Ou seja, vamos verificar se os valores são, postivos, negativos ou zerados
+		Pois assim, quando o player soltar o botão, vamso pegar o sinal do múmero e multiplicar
+		Por -1, desta forma, se o valor for positivo, ele vai somar -1, e quando for negativo
+		Vai somar 1, fazendo ele desacelerar
+		*/
+		propulsaoHorizontal += sign(propulsaoHorizontal) * -0.5
+		propulsaoVertical += sign(propulsaoVertical) * -0.5
+		
+	}
+	
+	x +=  propulsaoHorizontal
+	y +=  propulsaoVertical
+	
+	#region Teletransporte
+		/*
+		O teletransporte funcionará de uma maneira bem simples, toda vez que o player sair pelas bordas
+		Do jogo, teletransportaremos ele para o outro canto
+		Ou seja,
+		Se ele sair por cima, ele moverá para baixo
+		Se sair por baixo, vai para cima
+		Se sair pela esquerda vai para direita
+		E se sair pela direita, vai para esquerda
+		Ok, mas como poderemos fazer isto
+		
+		Bem simples
+		As coordenadas visiveis ficam entre 0 e o tamanho da sala,
+		Ou seja, na direção horizontal, as coordendas viciveis fiacam entre 0 e a largura da sala
+		E na vertical, ficam entre 0 e a altura da sala 
+		
+		Ou seja,
+		Caso queiramos checar se o player saiu pela esquerda, qual valor nós checamos o x ou o y? X
+		Certo, e como queremos checar se saiu pela esquerda, o x deve ser comparado a qual valor? 0
+		Certo, e vamos verificar que ele é maior ou menor que 0? Menor
+		
+		Então, caso o x dele seja menor que 0, iremos mandar ele para o outor lado, ou seja, o valor que há
+		na largura
+		
+		A mesma coisa (só que ao contrario) quando ele sair pela direita, no caso, o x vai ser maior que 
+		a largura da tela e vai receber 0, indo para o lado esquerdo
+		
+		Como já verificamos o X, sabemos que só sobrou o Y, ou seja, quando ele sair para cima ou para baixo
+		Caso o Y saia por cima, qual valor faremos a comparação, o 0 ou a altura da tela? com o zero, e se
+		ele é menor que 0
+		Se for, ele vai para o outro lado, ou seja, no valor que há na altura da sala
+		
+		
+		*/
+		
+		//Saiu pela esquerda
+		if x < 0{
+			x = room_width
+		}
+		
+		//Saiu pela direita
+		else if x > room_width{
+			x = 0
+		}
+		
+		//Saiu por cima
+		if y < 0{
+			y = room_height
+		}
+		
+		//Saiu por baixo
+		else if y > room_height{
+			y = 0
+		}
+			
+	
+	#endregion
 
 #endregion
