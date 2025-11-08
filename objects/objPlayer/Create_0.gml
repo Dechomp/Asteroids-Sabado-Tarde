@@ -13,4 +13,6 @@ propulsaoHorizontal = 0
 velocidade = 0.5
 
 //Limitador de velocidade do player
-velocidadeLimite = 15
+velocidadeLimite = 20
+
+andando = true

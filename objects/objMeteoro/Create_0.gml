@@ -107,8 +107,11 @@ Para manter uma boa velocidade, o valor minimo vai ser 2, e para não ficar muit
 O máximo vai ser 5
 */
 
-velocidade = random_range(2,5)
+velocidade = random_range(0.5,3)
 
 //Por fim, recebemos as posições no lugar certo
 x = posicaoX
 y = posicaoY
+
+//Vida dos asteoid
+vida = 10

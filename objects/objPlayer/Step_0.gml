@@ -35,6 +35,31 @@ Para fechar
 	
 	//Quando apertar  para esquerda ele aumentará o angulo e para direita diminuirá
 	girar = + (setaEsquerda or teclaEsquerda) - (setaDirieta or teclaDireita)
+	
+	/*
+	Para fazer o usuário toda hora apertar as teclas de ataque, usaremos a função keyboard_check_pressed()
+	Que é verdadeiro toda vez que uma tecla é precionada, e diferente do check normal, é que ele só checa se 
+	foi pressionada e não se está sendo pressionada
+	
+	Para checar o mouse, usaremos o mouse_chech_button_pressed() passando o mb_left como parâmetro, que é 
+	o botão esquerdo
+	*/
+	
+	//Teclas de ataque
+	//Enter
+	teclaEnter = keyboard_check_pressed(vk_enter)
+	
+	//Barra de espaço
+	barraEspaco = keyboard_check_pressed(vk_space)
+	
+	//Letra Q
+	teclaQ = keyboard_check_pressed(ord("Q"))
+	
+	//Botão esquerdo
+	botaoEsquerdo = mouse_check_button_pressed(mb_left)
+	
+	//Variável que armazena todas as teclas
+	teclaAtaque = teclaEnter or barraEspaco or teclaQ or botaoEsquerdo
 
 #endregion
 
@@ -55,7 +80,10 @@ Para fechar
 		image_angle = 0
 	}
 	
-	image_angle += girar * velocidadeGiro
+	if girar != 0{
+		image_angle += girar * velocidadeGiro
+	}
+	
 	
 	
 	
@@ -151,10 +179,8 @@ Para fechar
 	
 	//Caso precione os botões para cima
 	
-	
-	
 	//No final, iremos somar o angulo mais 1 e multiplicar pela direção
-	if andar{
+	/*if andar{
 		/*
 		A cada vez que o player apertar para frente, iremos aumentar o valor da propulsão
 		E poir exemplo, caso ele estaja indo parta frente e virar ao lado ao contrário, demorara
@@ -164,13 +190,32 @@ Para fechar
 		*/
 		//Vamos limitar a velocidade do player para o que há em velocidadeLimite
 		//Ou seja, a propulsão vai de (atualmente) de 30 a -30
-		if propulsaoHorizontal + direcaoHorizontal <= velocidadeLimite and propulsaoHorizontal + direcaoHorizontal  >= - velocidadeLimite{
+	/*	if propulsaoHorizontal + direcaoHorizontal <= velocidadeLimite and propulsaoHorizontal + direcaoHorizontal  >= - velocidadeLimite{
 			propulsaoHorizontal += direcaoHorizontal
 		}
 		
-		if propulsaoVertical + direcaoVertical <= velocidadeLimite and propulsaoVertical  + direcaoVertical  >= - velocidadeLimite{
+		/*
+		function motion_add(dir: Real, speed: Real) ->
+		Undefined
+		This function will modify the current direction and speed of the instance running the code, combining the values 
+		given with the current values.
+		dir		The added direction.
+		speed The added speed.
+		
+		Tradução
+		Função motion_add(dir: valor Real, speed: Real) -> retorno indefinido
+		Esta função modificará a direção atual e a velocidade que da istancia , combinando os valor com os valores atuais
+		dir Adiciona a direção
+		speed Adiciona a velocidade
+*/
+		
+		
+	/*	if propulsaoVertical + direcaoVertical <= velocidadeLimite and propulsaoVertical  + direcaoVertical  >= - velocidadeLimite{
 			propulsaoVertical += direcaoVertical
 		}
+		
+		
+		
 	}
 	else{
 		/*
@@ -192,13 +237,40 @@ Para fechar
 		Por -1, desta forma, se o valor for positivo, ele vai somar -1, e quando for negativo
 		Vai somar 1, fazendo ele desacelerar
 		*/
-		propulsaoHorizontal += sign(propulsaoHorizontal) * -0.5
+	/*	propulsaoHorizontal += sign(propulsaoHorizontal) * -0.5
 		propulsaoVertical += sign(propulsaoVertical) * -0.5
 		
-	}
+	}*/
 	
+	
+	
+	/*//Jeito antigo de se mover
 	x +=  propulsaoHorizontal
 	y +=  propulsaoVertical
+	*/
+	//Novo jeito usando a propulsão
+	//Quando apertar para andar
+	if andar{
+		
+		//Usa a função motion_add
+		motion_add(image_angle, velocidade)
+		
+		//Limita a velocidade, ou seja, caso passe da melovidade maxima, diminui a velocidade
+		if speed > velocidadeLimite{
+			speed = velocidadeLimite
+		}
+		
+	}
+	//Se não apertar para ir para frente e está andando
+	else if speed != 0{
+		
+		//Soma o valor ao contrário vezes 0.5, ou seja, soma ao contrário a metade do valor
+		motion_add(image_angle, -velocidade * 0.5)
+	}
+	
+	if !andar and speed > velocidadeLimite{
+		speed = 0
+	}
 	
 	#region Teletransporte
 		/*
@@ -258,4 +330,11 @@ Para fechar
 	
 	#endregion
 
+#endregion
+
+#region Tiros
+	//Toda vez que apertarmos uma tecla de tiro, iremos criar 1
+	if teclaAtaque{
+		instance_create_layer(x,y, "Instances", objTiro)
+	}
 #endregion
