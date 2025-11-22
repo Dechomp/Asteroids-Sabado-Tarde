@@ -250,7 +250,7 @@ Para fechar
 	*/
 	//Novo jeito usando a propulsão
 	//Quando apertar para andar
-	if andar{
+	/*if andar{
 		
 		//Usa a função motion_add
 		motion_add(image_angle, velocidade)
@@ -270,7 +270,23 @@ Para fechar
 	
 	if !andar and speed > velocidadeLimite{
 		speed = 0
+	}*/
+	
+	//Se eu apertar para andar
+	if andar{
+		//Se a velocidade da propulsão está dentro do limite, eu continuo aumentando o valor
+		if propulsao <= velocidadeLimite{
+			propulsao += velocidade
+		}
 	}
+	//Se eu soltar o andar e propulsão não é 0
+	else if propulsao != 0{
+		//Diminui a velocidade
+		propulsao -= velocidade / 2
+	}
+	
+	//Depois uso o motion_set que define a direção e o valor para onde vai o player
+	motion_set(image_angle, propulsao)
 	
 	#region Teletransporte
 		/*
