@@ -27,3 +27,6 @@ global.quantVida = 6
 //Para aparecer no meio do jogo, ao ser criado ele tem que aparecer na metade da altura e na metade da altura
 x = room_width / 2
 y = room_height / 2
+
+//Pontos do player
+global.quantPontos = 0

@@ -37,4 +37,7 @@ if (direcaoHorizontal == 1 and x > room_width + 64 ) or (direcaoHorizontal == -1
 	(direcaoVertical == 1 and y > room_height + 64 ) or (direcaoVertical == -1 and y < -64){
 	instance_destroy()	
 } 
+
+//Gira o meteoro na direção vertical vezes a velocidade
+image_angle += velocidade * direcaoVertical
 	
