@@ -1,3 +1,14 @@
+//Caso o jogo esteja pausado, ele vai ignorar as próximas linhas
+if global.pause{
+	alarm[0] = alarm[0] + 1
+	image_speed = 0
+	speed = 0
+	exit
+}
+
+//image_speed = sprite_index.image_speed
+image_speed = 15
+
 /*
 Criando os botões do jogo
 Para isto usaremos as funções keyboard_check e ord()
@@ -354,3 +365,14 @@ Para fechar
 		instance_create_layer(x,y, "Instances", objTiro)
 	}
 #endregion
+
+
+if global.quantVida <= 0{
+	global.pause = true
+	
+	layer_set_visible("InstanciasFim", true)
+	layer_set_visible("PainelFim", true)
+	layer_set_visible("MenuPauseInstancias", false)
+	layer_set_visible("Instances", false)
+	
+}

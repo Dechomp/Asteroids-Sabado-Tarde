@@ -30,3 +30,4 @@ y = room_height / 2
 
 //Pontos do player
 global.quantPontos = 0
+

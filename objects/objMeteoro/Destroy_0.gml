@@ -10,3 +10,4 @@ if vida <= 0{
 	//Recebe 30 pontos
 	global.quantPontos += 30
 }
+

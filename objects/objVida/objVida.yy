@@ -9,8 +9,8 @@
   "name":"objVida",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"Mensagem",
+    "path":"folders/Objects/Mensagem.yy",
   },
   "parentObjectId":null,
   "persistent":false,

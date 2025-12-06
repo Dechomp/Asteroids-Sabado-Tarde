@@ -1,3 +1,13 @@
+//Caso o jogo esteja pausado, ele vai ignorar as próximas linhas
+if global.pause{
+	alarm[0] = alarm[0] + 1
+	image_speed = 0
+	speed = 0
+	exit
+}
+
+
+
 //Usa a função para se mover
 motion_set(image_angle, velocidade)
 
